@@ -5,8 +5,9 @@ if [ "$EUID" -ne 0 ]
   exit
 fi
 
-iptables -I INPUT -s $(w | grep root | head -n 1 | awk '{ print $3 }') -j ACCEPT
-iptables -I INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+iptables -A INPUT -i lo -j ACCEPT
+iptables -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+iptables -A INPUT -s $(w | grep root | head -n 1 | awk '{ print $3 }') -j ACCEPT
 iptables -P INPUT DROP
 
 cd /root
